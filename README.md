@@ -99,11 +99,30 @@ DEEPSEEK_API_KEY=sk-your-key
 
 ### 3. Setup Database
 
-```bash
-# Create the database in MySQL
-sudo mysql -u root -p -e "CREATE DATABASE county_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+First, create a dedicated MySQL user (recommended over root):
 
-# Seed initial data (creates tables and default admin user)
+```bash
+# Log into MySQL as root (use sudo on Ubuntu)
+sudo mysql -u root
+
+# Create database and user
+CREATE DATABASE county_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'county_erp_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+GRANT ALL PRIVILEGES ON county_erp.* TO 'county_erp_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Update `backend/.env` with the new credentials:
+
+```env
+DB_USER=county_erp_user
+DB_PASSWORD=your_secure_password
+```
+
+Then seed the database:
+
+```bash
 cd backend
 npm run seed
 ```

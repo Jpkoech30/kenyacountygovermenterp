@@ -295,12 +295,53 @@ Save as `/etc/apache2/sites-available/county-erp.conf`:
 </VirtualHost>
 ```
 
+### PM2 Process Management
+
+The app runs under PM2 with the config at [`ecosystem.config.js`](ecosystem.config.js).
+
+#### Common Commands
+
+```bash
+# Start / restart
+pm2 start ecosystem.config.js --env production
+pm2 restart county-erp-api
+
+# Status & logs
+pm2 status
+pm2 logs county-erp-api
+pm2 logs county-erp-api --lines 100
+
+# Monitor in real-time
+pm2 monit
+
+# Stop / delete
+pm2 stop county-erp-api
+pm2 delete county-erp-api
+
+# Save process list & enable on boot
+pm2 save
+pm2 startup
+```
+
+#### Logs
+
+Logs are written to `logs/api-out.log` and `logs/api-error.log` (relative to project root). View with:
+
+```bash
+tail -f logs/api-error.log
+pm2 logs county-erp-api --lines 200
+```
+
+#### Memory Management
+
+PM2 auto-restarts the process if memory exceeds 500MB (`max_memory_restart`). If the app crashes, it retries up to 10 times with a 5-second delay between attempts.
+
 ### Updating
 
 ```bash
 cd /var/www/county-erp
 git pull origin master
-cd backend && npm install --production && pm2 restart west-pokot-erp-backend
+cd backend && npm install --production && pm2 restart county-erp-api
 cd ../frontend && npm install && npm run build
 ```
 

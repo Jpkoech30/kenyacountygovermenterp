@@ -1,28 +1,53 @@
-# Kenya County Government ERP
+<div align="center">
 
-A comprehensive enterprise resource planning system for Kenyan county governments. Built with Vue 3, Express.js, and MySQL.
+# 🏛️ Kenya County Government ERP
 
-## Modules
+**Enterprise Resource Planning System for Kenyan County Governments**
 
-- **Content Management System** — Create, manage, and publish public content (news, events, tenders, vacancies, departments, staff profiles)
-- **Human Resources** — Employee lifecycle, leave management, attendance tracking, performance reviews, disciplinary cases, recruitment
-- **Health Management** — Patient records, appointments, campaigns, inventory, ambulance requests
-- **Community Health** — Community units, volunteers, households, visits, supplies, CHV management
-- **Permits & Licensing** — Permit applications, assignments, transactions, citizen representations
-- **Public Website** — Dynamic menus, hero slides, facts, contact forms, newsletter subscriptions
-- **AI Content Assistant** — LLM-powered content summarization, grammar checking, translation, SEO suggestions
+[![Vue 3](https://img.shields.io/badge/Vue_3-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![DaisyUI](https://img.shields.io/badge/DaisyUI-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)](https://daisyui.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-## Tech Stack
+</div>
+
+---
+
+## 📋 Overview
+
+A comprehensive ERP solution designed for Kenyan county governments. Manages content publishing, human resources, health services, community health programs, permits and licensing, and public-facing information — all through a unified admin dashboard.
+
+---
+
+## 🧩 Modules
+
+| Module | Description |
+|--------|-------------|
+| 📰 **Content Management** | News, events, tenders, vacancies, departments, staff profiles with multi-locale support (English/Swahili/Pokot) |
+| 👥 **Human Resources** | Employee lifecycle, leave management, attendance, performance reviews, disciplinary cases, recruitment pipeline |
+| 🏥 **Health Management** | Patient records, appointments, campaigns, inventory tracking, ambulance requests |
+| 👨‍👩‍👧‍👦 **Community Health** | Community units, volunteers, households, CHV management, supply requests, visit tracking |
+| 📋 **Permits & Licensing** | Permit applications, assignments, transactions, citizen representations |
+| 🌐 **Public Website** | Dynamic menus, hero slides, facts, contact forms, newsletter subscriptions |
+| 🤖 **AI Assistant** | LLM-powered content summarization, grammar checking, translation, SEO suggestions |
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Vue 3, Vite, Pinia, Vue Router, DaisyUI (Tailwind CSS) |
-| Backend | Node.js, Express.js, Sequelize ORM |
-| Database | MySQL |
-| AI | DeepSeek API integration |
-| Auth | JWT-based authentication with role-based access control |
+| **Frontend** | Vue 3, Vite, Pinia, Vue Router, DaisyUI (Tailwind CSS) |
+| **Backend** | Node.js, Express.js, Sequelize ORM |
+| **Database** | MySQL 8+ |
+| **AI** | DeepSeek API |
+| **Auth** | JWT + Role-Based Access Control |
+| **Payments** | M-Pesa API integration |
 
-## Getting Started
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -30,76 +55,105 @@ A comprehensive enterprise resource planning system for Kenyan county government
 - MySQL 8+
 - npm or yarn
 
-### Backend Setup
+### 1. Clone & Install
+
+```bash
+# Backend
+cd backend
+npm install
+cp .env.example .env
+
+# Frontend
+cd ../frontend
+npm install
+```
+
+### 2. Configure Environment
+
+Edit `backend/.env` with your credentials:
+
+```env
+DB_NAME=county_erp
+DB_USER=root
+DB_PASS=your_password
+JWT_SECRET=your_jwt_secret
+DEEPSEEK_API_KEY=sk-xxxxx
+```
+
+### 3. Seed Database
 
 ```bash
 cd backend
-npm install
-cp .env.example .env   # Configure database credentials and API keys
-npm run dev
+npm run seed
 ```
 
-### Frontend Setup
+### 4. Run Development Servers
 
 ```bash
-cd frontend
-npm install
-npm run dev
+# Terminal 1 — Backend (http://localhost:5000)
+cd backend && npm run dev
+
+# Terminal 2 — Frontend (http://localhost:5173)
+cd frontend && npm run dev
 ```
 
-### Database
+---
 
-```bash
-cd backend
-npm run seed   # Seed initial data (roles, admin user, sample content)
-```
-
-## Environment Variables
-
-Key variables for `backend/.env`:
-
-| Variable | Description |
-|----------|-------------|
-| `DB_NAME` | MySQL database name |
-| `DB_USER` | MySQL user |
-| `DB_PASS` | MySQL password |
-| `JWT_SECRET` | JWT signing secret |
-| `DEEPSEEK_API_KEY` | API key for AI content assistant |
-| `MPESA_CONSUMER_KEY` | M-Pesa API consumer key |
-| `MPESA_CONSUMER_SECRET` | M-Pesa API consumer secret |
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 ├── backend/
 │   ├── src/
-│   │   ├── controllers/    # Route handlers
-│   │   ├── models/         # Sequelize models
-│   │   ├── routes/         # Express routes
-│   │   ├── services/       # Business logic
-│   │   ├── middleware/     # Auth, error handling
-│   │   └── index.js        # App entry point
-│   ├── scripts/            # Migration scripts
-│   └── seeders/            # Database seeders
+│   │   ├── controllers/      # Route handlers
+│   │   ├── models/           # Sequelize models (30+ entities)
+│   │   ├── routes/           # Express route definitions
+│   │   ├── services/         # Business logic layer
+│   │   ├── middleware/       # Auth, authorization, error handling
+│   │   └── index.js          # Application entry point
+│   ├── scripts/              # Database migration scripts
+│   └── seeders/              # Initial data seeders
 ├── frontend/
 │   ├── src/
-│   │   ├── components/     # Reusable Vue components
-│   │   ├── views/          # Page components
-│   │   ├── stores/         # Pinia stores
-│   │   ├── router/         # Vue Router config
-│   │   ├── api/            # API client modules
-│   │   └── layouts/        # Layout components
-│   └── tailwind.config.js  # Theme configuration
-└── plans/                  # Architecture and design docs
+│   │   ├── components/       # Reusable Vue components
+│   │   ├── views/            # Page components (admin + public)
+│   │   ├── stores/           # Pinia state management
+│   │   ├── router/           # Vue Router configuration
+│   │   ├── api/              # API client modules
+│   │   └── layouts/          # Admin & public layouts
+│   └── tailwind.config.js    # Custom DaisyUI themes
+└── plans/                    # Architecture & design documentation
 ```
 
-## Themes
+---
 
-The UI uses a custom DaisyUI theme with two variants:
+## 🎨 Themes
 
-- **`county`** (light) — Warm off-white background with accessible contrast ratios
-- **`county-dark`** (dark) — Warm dark charcoal for reduced eye strain
+The UI uses a custom DaisyUI theme with light and dark variants:
 
-## License
+- **`county`** (light) — Warm off-white background (`#F9F7F4`) with accessible contrast ratios (WCAG AA)
+- **`county-dark`** (dark) — Warm dark charcoal (`#232428`) for reduced eye strain
 
-MIT
+---
+
+## 🔑 Default Roles
+
+| Role | Permissions |
+|------|-------------|
+| **Super Admin** | Full system access |
+| **Content Manager** | CMS operations, media library |
+| **HR Manager** | Employee management, recruitment |
+| **Health Officer** | Health module management |
+| **Community Health Worker** | CHV-specific operations |
+| **Reviewer** | Content review and approval |
+
+---
+
+## 📄 License
+
+MIT © Kenya County Government
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ for Kenyan counties</sub>
+</div>

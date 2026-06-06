@@ -135,6 +135,139 @@ The UI uses a custom DaisyUI theme with light and dark variants:
 
 ---
 
+## 🚀 Production Deployment
+
+Deploy to an Ubuntu server with Apache reverse proxy, PM2 process manager, and Let's Encrypt SSL.
+
+### Architecture
+
+```
+Visitor Browser
+       │
+       ▼
+  Apache (Port 443 — HTTPS)
+       │
+       ├── /api/*  ──► Node.js API (Port 3000) ──► MySQL
+       ├── /media/* ──► Node.js API (static files)
+       └── /*       ──► Vue SPA (frontend/dist/index.html)
+```
+
+### Prerequisites
+
+```bash
+# Install Node.js 18+
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Install MySQL, Apache, PM2
+sudo apt install -y mysql-server apache2
+sudo npm install -g pm2
+
+# Enable Apache modules
+sudo a2enmod proxy proxy_http rewrite ssl headers
+```
+
+### Quick Start
+
+```bash
+# 1. Clone the repo
+sudo mkdir -p /var/www/county-erp
+sudo chown -R $USER:$USER /var/www/county-erp
+git clone https://github.com/Jpkoech30/kenyacountygovermenterp.git /var/www/county-erp
+cd /var/www/county-erp
+
+# 2. Configure backend
+cd backend
+cp .env.example .env
+# Edit .env with your database credentials and secrets
+npm install --production
+
+# 3. Build frontend
+cd ../frontend
+npm install
+npm run build
+
+# 4. Setup database
+sudo mysql -u root -p -e "CREATE DATABASE county_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+cd ../backend
+npm run seed
+
+# 5. Start with PM2
+cd ..
+pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
+
+# 6. Configure Apache
+sudo nano /etc/apache2/sites-available/county-erp.conf
+# Use the template below, replacing your-domain.com
+
+sudo a2ensite county-erp.conf
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
+
+# 7. Get SSL certificate
+sudo certbot --apache -d your-domain.com -d www.your-domain.com
+```
+
+### Apache Virtual Host Template
+
+Save as `/etc/apache2/sites-available/county-erp.conf`:
+
+```apache
+<VirtualHost *:80>
+    ServerName your-domain.com
+    ServerAlias www.your-domain.com
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName your-domain.com
+    ServerAlias www.your-domain.com
+
+    DocumentRoot /var/www/county-erp/frontend/dist
+
+    <Directory /var/www/county-erp/frontend/dist>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+        FallbackResource /index.html
+    </Directory>
+
+    ProxyPreserveHost On
+    ProxyPass /api http://localhost:3000/api
+    ProxyPassReverse /api http://localhost:3000/api
+    ProxyPass /media http://localhost:3000/media
+    ProxyPassReverse /media http://localhost:3000/media
+
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+
+    ErrorLog ${APACHE_LOG_DIR}/county-erp-error.log
+    CustomLog ${APACHE_LOG_DIR}/county-erp-access.log combined
+
+    Include /etc/letsencrypt/options-ssl-apache.conf
+    SSLCertificateFile /etc/letsencrypt/live/your-domain.com/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/your-domain.com/privkey.pem
+</VirtualHost>
+```
+
+### Updating
+
+```bash
+cd /var/www/county-erp
+git pull origin master
+cd backend && npm install --production && pm2 restart west-pokot-erp-backend
+cd ../frontend && npm install && npm run build
+```
+
+> **Full deployment guide**: See [`plans/production-deployment-plan.md`](plans/production-deployment-plan.md) for detailed steps, troubleshooting, and maintenance instructions.
+
+---
+
 ## 🔑 Default Roles
 
 | Role | Permissions |

@@ -106,6 +106,8 @@ cd /var/www/county-erp
 
 ### 2. Configure Backend
 
+The database connection is configured in [`backend/src/config/database.js`](../backend/src/config/database.js) — it reads all parameters from environment variables.
+
 ```bash
 cd /var/www/county-erp/backend
 cp .env.example .env
@@ -118,24 +120,28 @@ Required `.env` values:
 NODE_ENV=production
 PORT=3000
 
+# ── Database ────────────────────────────────────────────────────
+# These map to backend/src/config/database.js
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=county_erp
-DB_USER=root
+DB_USER=county_erp_user
 DB_PASS=your_secure_password
 
+# ── JWT ─────────────────────────────────────────────────────────
 JWT_SECRET=generate_a_strong_random_secret
 JWT_EXPIRES_IN=7d
 
+# ── AI (optional) ───────────────────────────────────────────────
 DEEPSEEK_API_KEY=sk-your-key-if-using-ai-features
 
-# M-Pesa (optional)
+# ── M-Pesa (optional) ───────────────────────────────────────────
 MPESA_CONSUMER_KEY=your_key
 MPESA_CONSUMER_SECRET=your_secret
 MPESA_PASSKEY=your_passkey
 MPESA_SHORTCODE=your_shortcode
 
-# Email (optional)
+# ── Email (optional) ────────────────────────────────────────────
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_email

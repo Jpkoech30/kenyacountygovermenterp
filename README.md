@@ -80,9 +80,15 @@ JWT_SECRET=your_jwt_secret
 DEEPSEEK_API_KEY=sk-xxxxx
 ```
 
-### 3. Seed Database
+The database connection is configured in [`backend/src/config/database.js`](backend/src/config/database.js) — it reads `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` from environment variables.
+
+### 3. Setup Database
 
 ```bash
+# Create the database in MySQL
+sudo mysql -u root -p -e "CREATE DATABASE county_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# Seed initial data
 cd backend
 npm run seed
 ```
@@ -90,7 +96,7 @@ npm run seed
 ### 4. Run Development Servers
 
 ```bash
-# Terminal 1 — Backend (http://localhost:5000)
+# Terminal 1 — Backend (http://localhost:3000)
 cd backend && npm run dev
 
 # Terminal 2 — Frontend (http://localhost:5173)

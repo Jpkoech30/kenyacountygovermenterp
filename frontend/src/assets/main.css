@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Apple-Inspired Base Styles ──────────────────────────────── */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Heading scale */
+  h1 { @apply text-2xl font-bold tracking-tight; }
+  h2 { @apply text-xl font-semibold tracking-tight; }
+  h3 { @apply text-lg font-semibold; }
+  h4 { @apply text-base font-semibold; }
+  h5 { @apply text-sm font-semibold; }
+  h6 { @apply text-xs font-semibold uppercase tracking-wider; }
+}
+
+/* ── Content Area Utilities ──────────────────────────────────── */
+@layer components {
+  /* Reusable content section card */
+  .content-section {
+    @apply bg-base-100 rounded-lg border border-base-200 p-4;
+  }
+  .content-section-header {
+    @apply flex items-center justify-between mb-4 pb-3 border-b border-base-200;
+  }
+  .content-section-title {
+    @apply text-base font-semibold text-base-content;
+  }
+
+  /* Data table wrapper */
+  .content-table-wrap {
+    @apply overflow-x-auto rounded-lg border border-base-200;
+  }
+
+  /* Dashboard stat card with hover lift */
+  .stat-card {
+    @apply bg-base-100 rounded-xl border border-base-200 p-4 transition-all duration-150;
+  }
+  .stat-card:hover {
+    @apply shadow-[0_4px_12px_rgba(0,0,0,0.06)] border-base-300;
+  }
+
+  /* Route transition animations */
+  .content-fade-enter-active,
+  .content-fade-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .content-fade-enter-from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  .content-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ── Apple-Inspired Hover Effects ────────────────────────────── */
+@layer components {
+  /* Card hover lift */
+  .card-hover {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Link underline animation */
+  .link-underline {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: currentColor;
+    transition: width 0.2s ease;
+  }
+  .link-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Apple-style button press effect */
+  .btn-press {
+    transition: transform 0.1s ease;
+  }
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+
+  /* Fade-in animation for content */
+  .fade-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  /* Slide-up animation */
+  .slide-up {
+    animation: slideUp 0.3s ease forwards;
+  }
+}
+
+/* ── Keyframe Animations ──────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Reduced Motion ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Focus Styles for Accessibility ───────────────────────────── */
+@layer base {
+  :focus-visible {
+    outline: 2px solid;
+    outline-color: theme('colors.primary');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove default focus outline for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* ── Scrollbar Styling ────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, theme('colors.base-content') 15%, transparent);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, theme('colors.base-content') 25%, transparent);
+}
+
+/* ── Selection Color ──────────────────────────────────────────── */
+::selection {
+  background-color: color-mix(in srgb, theme('colors.primary') 25%, transparent);
+  color: theme('colors.base-content');
+}

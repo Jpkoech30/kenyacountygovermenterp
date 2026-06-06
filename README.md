@@ -88,7 +88,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=county_erp
 DB_USER=root
-DB_PASS=your_mysql_password
+DB_PASSWORD=your_mysql_password
 
 # ── JWT ─────────────────────────────────────────────────────────
 JWT_SECRET=your_random_secret_here

@@ -70,17 +70,32 @@ npm install
 
 ### 2. Configure Environment
 
-Edit `backend/.env` with your credentials:
+The database connection is configured in [`backend/src/config/database.js`](backend/src/config/database.js) — it reads `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` from environment variables.
 
-```env
-DB_NAME=county_erp
-DB_USER=root
-DB_PASS=your_password
-JWT_SECRET=your_jwt_secret
-DEEPSEEK_API_KEY=sk-xxxxx
+Create and edit `backend/.env`:
+
+```bash
+cd backend
+cp .env.example .env
+nano .env
 ```
 
-The database connection is configured in [`backend/src/config/database.js`](backend/src/config/database.js) — it reads `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` from environment variables.
+Set these values (replace with your actual credentials):
+
+```env
+# ── Database ────────────────────────────────────────────────────
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=county_erp
+DB_USER=root
+DB_PASS=your_mysql_password
+
+# ── JWT ─────────────────────────────────────────────────────────
+JWT_SECRET=your_random_secret_here
+
+# ── AI (optional) ───────────────────────────────────────────────
+DEEPSEEK_API_KEY=sk-your-key
+```
 
 ### 3. Setup Database
 
@@ -88,7 +103,7 @@ The database connection is configured in [`backend/src/config/database.js`](back
 # Create the database in MySQL
 sudo mysql -u root -p -e "CREATE DATABASE county_erp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Seed initial data
+# Seed initial data (creates tables and default admin user)
 cd backend
 npm run seed
 ```

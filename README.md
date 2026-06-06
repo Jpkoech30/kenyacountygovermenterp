@@ -240,19 +240,61 @@ pm2 startup
 
 # 6. Configure Apache
 sudo nano /etc/apache2/sites-available/county-erp.conf
-# Use the template below, replacing your-domain.com
+# Use the "No domain" template below
 
-sudo a2ensite county-erp.conf
 sudo a2dissite 000-default.conf
+sudo a2ensite county-erp.conf
 sudo systemctl reload apache2
 
-# 7. Get SSL certificate
-sudo certbot --apache -d your-domain.com -d www.your-domain.com
+# Access at http://YOUR_SERVER_IP
 ```
 
 ### Apache Virtual Host Template
 
+#### Option 1 — No domain (access via server IP)
+
 Save as `/etc/apache2/sites-available/county-erp.conf`:
+
+```apache
+<VirtualHost *:80>
+    ServerAdmin admin@example.com
+    ServerName _default_
+
+    DocumentRoot /var/www/county-erp/frontend/dist
+
+    <Directory /var/www/county-erp/frontend/dist>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+        FallbackResource /index.html
+    </Directory>
+
+    ProxyPreserveHost On
+    ProxyPass /api http://localhost:3000/api
+    ProxyPassReverse /api http://localhost:3000/api
+    ProxyPass /media http://localhost:3000/media
+    ProxyPassReverse /media http://localhost:3000/media
+
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+
+    ErrorLog ${APACHE_LOG_DIR}/county-erp-error.log
+    CustomLog ${APACHE_LOG_DIR}/county-erp-access.log combined
+</VirtualHost>
+```
+
+Enable and reload:
+
+```bash
+sudo a2dissite 000-default.conf
+sudo a2ensite county-erp.conf
+sudo systemctl reload apache2
+```
+
+Access via `http://YOUR_SERVER_IP` (e.g. `http://192.168.1.100`).
+
+#### Option 2 — With domain + SSL (when you have a domain)
 
 ```apache
 <VirtualHost *:80>
